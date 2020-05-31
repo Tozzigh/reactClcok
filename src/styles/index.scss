@@ -1,13 +1,47 @@
 @import "~bootstrap/scss/bootstrap.scss";
 
-/* 
-
-    You can write your own styles here...
-    
-    
-    ...Or you can use the import command to include 
-    other sylesheets into your bunde as well, e.j:
-    
-    import 'relative/path/to/stylesheet.scss';
-
-*/
+body{
+    height: 100vh;    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.ciao{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    color: white;
+    border-radius: 100%;
+    margin: 0 10px;
+    width: 200px;
+    height: 200px;
+    font-size: 100px;
+}
+.container-fluid{
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    padding:0;
+}
+.fas{
+    font-size: 150px;
+}
+.due{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 100px;
+    color: black;
+}
+.clock{
+    display: flex;
+    flex-direction: column;
+}
+.countdown{
+    display: flex;
+    justify-self: center;
+    align-self: center;
+    margin: 50px 0;
+    width: 30%;
+}
