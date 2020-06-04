@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 
 function SecondsCounter() {
 	var [time, setTime] = useState({ seconds: 0, minutes: 0, hours: 0 });
-
 	var [pauseStart, setPauseStart] = useState(false);
 	var [countdownOn, setCountdownOn] = useState(false);
+	var [timeOut, setTimeOut] = useState(false);
 	useEffect(
 		() => {
 			if (pauseStart && !countdownOn) {
@@ -58,6 +58,13 @@ function SecondsCounter() {
 							};
 						});
 					}
+					if (
+						time.hours == 0 &&
+						time.minutes == 0 &&
+						time.seconds == 0
+					) {
+						setTimeOut((timeOut = true));
+					}
 				}, 1000);
 				return () => clearInterval(idd);
 			}
@@ -92,77 +99,109 @@ function SecondsCounter() {
 						parseInt(countdownNumber.toString().slice(-6, -4)) || 0
 				};
 			});
-
+			setPauseStart((pauseStart = true));
 			setCountdownOn((countdownOn = true));
 		}
 	};
 	return (
-		<div className="clock">
-			<div className="container-fluid">
-				<div className="ciao fas fa-hourglass-half" />
-				<div className="ciao">
-					{time.hours.toString()[time.hours.toString().length - 2] ||
-						0}
-				</div>
-				<div className="ciao">
-					{time.hours.toString()[time.hours.toString().length - 1] ||
-						0}
-				</div>
-				<div className="due">:</div>
-				<div className="ciao">
-					{time.minutes.toString()[
-						time.minutes.toString().length - 2
-					] || 0}
-				</div>
-				<div className="ciao">
-					{time.minutes.toString()[
-						time.minutes.toString().length - 1
-					] || 0}
-				</div>
-				<div className="due">:</div>
-				<div className="ciao">
-					{time.seconds.toString()[
-						time.seconds.toString().length - 2
-					] || 0}
-				</div>
-				<div className="ciao">
-					{time.seconds.toString()[
-						time.seconds.toString().length - 1
-					] || 0}
-				</div>
-			</div>
-			<input
-				type="text"
-				className="countdown"
-				min="1"
-				maxLength={6}
-				placeholder="Add a number, press Enter and Play for the final Countdown! "
-				onKeyPress={countdown}
-			/>
-			<span>Max input 99:59:59</span>
-			{pauseStart ? (
-				<button
-					className="fa fa-pause"
-					onClick={() => setPauseStart((pauseStart = false))}
-				/>
-			) : (
-				<button
-					className="fa fa-play"
-					onClick={() => setPauseStart((pauseStart = true))}
-				/>
-			)}
-			<button
-				className="fa fa-redo"
-				onClick={() => {
-					setTime(time => {
-						return { ...time, seconds: 0, minutes: 0, hours: 0 };
-					});
+		<>
+			{!timeOut ? (
+				<div className="clock">
+					<div className="container-fluid">
+						<div className="ciao fas fa-hourglass-half" />
+						<div className="ciao">
+							{time.hours.toString()[
+								time.hours.toString().length - 2
+							] || 0}
+						</div>
+						<div className="ciao">
+							{time.hours.toString()[
+								time.hours.toString().length - 1
+							] || 0}
+						</div>
+						<div className="due">:</div>
+						<div className="ciao">
+							{time.minutes.toString()[
+								time.minutes.toString().length - 2
+							] || 0}
+						</div>
+						<div className="ciao">
+							{time.minutes.toString()[
+								time.minutes.toString().length - 1
+							] || 0}
+						</div>
+						<div className="due">:</div>
+						<div className="ciao">
+							{time.seconds.toString()[
+								time.seconds.toString().length - 2
+							] || 0}
+						</div>
+						<div className="ciao">
+							{time.seconds.toString()[
+								time.seconds.toString().length - 1
+							] || 0}
+						</div>
+					</div>
+					<input
+						type="text"
+						className="countdown"
+						min="1"
+						maxLength={6}
+						placeholder="Add a number and press Enter for the final Countdown!"
+						onKeyPress={countdown}
+					/>
+					<span>Max input 99:59:59</span>
+					{pauseStart ? (
+						<button
+							className="fa fa-pause"
+							onClick={() => setPauseStart((pauseStart = false))}
+						/>
+					) : (
+						<button
+							className="fa fa-play"
+							onClick={() => setPauseStart((pauseStart = true))}
+						/>
+					)}
+					<button
+						className="fa fa-redo"
+						onClick={() => {
+							setTime(time => {
+								return {
+									...time,
+									seconds: 0,
+									minutes: 0,
+									hours: 0
+								};
+							});
 
-					setPauseStart((pauseStart = false));
-					setCountdownOn((countdownOn = false));
-				}}
-			/>
-		</div>
+							setPauseStart((pauseStart = false));
+							setCountdownOn((countdownOn = false));
+						}}
+					/>
+				</div>
+			) : (
+				<div className="timeOut">
+					<h1>!!! TIME RAN OUT !!!</h1>
+					<button
+						className="fa fa-redo"
+						onClick={() => {
+							setTime(time => {
+								return {
+									...time,
+									seconds: 0,
+									minutes: 0,
+									hours: 0
+								};
+							});
+
+							setPauseStart((pauseStart = false));
+							setCountdownOn((countdownOn = false));
+							setTimeOut((timeOut = false));
+						}}
+					/>
+				</div>
+			)}
+		</>
 	);
 }
 

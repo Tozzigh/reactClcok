@@ -57,5 +57,9 @@ span{
     justify-self: center;
     align-self: center;
 }
+.timeOut{
+    display: flex;
+    flex-direction: column;
+}
 input:focus {outline:0;}
 button:focus {outline:0;}
