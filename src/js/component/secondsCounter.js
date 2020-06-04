@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 function SecondsCounter() {
-	var [time, setTime] = useState({ seconds: 59, minutes: 59, hours: 59 });
+	var [time, setTime] = useState({ seconds: 0, minutes: 0, hours: 0 });
 
 	var [pauseStart, setPauseStart] = useState(false);
 	var [countdownOn, setCountdownOn] = useState(false);
@@ -34,16 +34,65 @@ function SecondsCounter() {
 				}, 1000);
 				return () => clearInterval(id);
 			}
+			if (pauseStart && countdownOn) {
+				const idd = setInterval(() => {
+					if (time.seconds > 0) {
+						setTime(time => {
+							return { ...time, seconds: time.seconds - 1 };
+						});
+					} else if (time.seconds == 0 && time.minutes > 0) {
+						setTime(time => {
+							return {
+								...time,
+								seconds: 59,
+								minutes: time.minutes - 1
+							};
+						});
+					} else if (time.seconds == 0 && time.minutes == 0) {
+						setTime(time => {
+							return {
+								...time,
+								minutes: 59,
+								seconds: 59,
+								hours: time.hours - 1
+							};
+						});
+					}
+				}, 1000);
+				return () => clearInterval(idd);
+			}
 		},
-		[pauseStart, time.seconds, time.minutes, time.hours]
+		[pauseStart, countdownOn, time.seconds, time.minutes, time.hours]
 	);
 	const countdown = evt => {
 		const allowed = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 		if (!allowed.includes(evt.key)) {
 			evt.preventDefault();
 		}
-		if (evt.key === "Enter" && evt.target.value !== "") {
-			setTime((time = 0));
+		if (
+			evt.key === "Enter" &&
+			evt.target.value !== "" &&
+			parseInt(evt.target.value) <= 995959
+		) {
+			var countdownNumber = parseInt(evt.target.value);
+			if (parseInt(countdownNumber.toString().slice(-2)) > 59) {
+				countdownNumber = countdownNumber + 40;
+			}
+			if (parseInt(countdownNumber.toString().slice(-4, -2)) > 59) {
+				countdownNumber = countdownNumber + 4000;
+			}
+			setTime(time => {
+				return {
+					...time,
+					seconds:
+						parseInt(countdownNumber.toString().slice(-2)) || 0,
+					minutes:
+						parseInt(countdownNumber.toString().slice(-4, -2)) || 0,
+					hours:
+						parseInt(countdownNumber.toString().slice(-6, -4)) || 0
+				};
+			});
+
 			setCountdownOn((countdownOn = true));
 		}
 	};
@@ -87,9 +136,10 @@ function SecondsCounter() {
 				className="countdown"
 				min="1"
 				maxLength={6}
-				placeholder="Final Countdown"
+				placeholder="Add a number, press Enter and Play for the final Countdown! "
 				onKeyPress={countdown}
 			/>
+			<span>Max input 99:59:59</span>
 			{pauseStart ? (
 				<button
 					className="fa fa-pause"
@@ -104,7 +154,9 @@ function SecondsCounter() {
 			<button
 				className="fa fa-redo"
 				onClick={() => {
-					setTime(time => {});
+					setTime(time => {
+						return { ...time, seconds: 0, minutes: 0, hours: 0 };
+					});
 
 					setPauseStart((pauseStart = false));
 					setCountdownOn((countdownOn = false));
