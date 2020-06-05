@@ -5,68 +5,71 @@ function SecondsCounter() {
 	var [pauseStart, setPauseStart] = useState(false);
 	var [countdownOn, setCountdownOn] = useState(false);
 	var [timeOut, setTimeOut] = useState(false);
+
 	useEffect(
 		() => {
-			if (pauseStart && !countdownOn) {
-				const id = setInterval(() => {
-					if (time.seconds < 59) {
-						setTime(time => {
-							return { ...time, seconds: time.seconds + 1 };
-						});
-					} else if (time.seconds == 59 && time.minutes < 59) {
-						setTime(time => {
-							return {
-								...time,
-								minutes: time.minutes + 1,
-								seconds: 0
-							};
-						});
-					} else if (time.seconds == 59 && time.minutes == 59) {
-						setTime(time => {
-							return {
-								...time,
-								minutes: 0,
-								seconds: 0,
-								hours: time.hours + 1
-							};
-						});
-					}
-				}, 1000);
-				return () => clearInterval(id);
-			}
-			if (pauseStart && countdownOn) {
-				const idd = setInterval(() => {
-					if (time.seconds > 0) {
-						setTime(time => {
-							return { ...time, seconds: time.seconds - 1 };
-						});
-					} else if (time.seconds == 0 && time.minutes > 0) {
-						setTime(time => {
-							return {
-								...time,
-								seconds: 59,
-								minutes: time.minutes - 1
-							};
-						});
-					} else if (time.seconds == 0 && time.minutes == 0) {
-						setTime(time => {
-							return {
-								...time,
-								minutes: 59,
-								seconds: 59,
-								hours: time.hours - 1
-							};
-						});
-					}
-					if (
-						time.hours == 0 &&
-						time.minutes == 0 &&
-						time.seconds == 0
-					) {
-						setTimeOut((timeOut = true));
-					}
-				}, 1000);
-				return () => clearInterval(idd);
+			if (document.hasFocus()) {
+				if (pauseStart && !countdownOn) {
+					const id = setInterval(() => {
+						if (time.seconds < 59) {
+							setTime(time => {
+								return { ...time, seconds: time.seconds + 1 };
+							});
+						} else if (time.seconds == 59 && time.minutes < 59) {
+							setTime(time => {
+								return {
+									...time,
+									minutes: time.minutes + 1,
+									seconds: 0
+								};
+							});
+						} else if (time.seconds == 59 && time.minutes == 59) {
+							setTime(time => {
+								return {
+									...time,
+									minutes: 0,
+									seconds: 0,
+									hours: time.hours + 1
+								};
+							});
+						}
+					}, 1000);
+					return () => clearInterval(id);
+				}
+				if (pauseStart && countdownOn) {
+					const idd = setInterval(() => {
+						if (time.seconds > 0) {
+							setTime(time => {
+								return { ...time, seconds: time.seconds - 1 };
+							});
+						} else if (time.seconds == 0 && time.minutes > 0) {
+							setTime(time => {
+								return {
+									...time,
+									seconds: 59,
+									minutes: time.minutes - 1
+								};
+							});
+						} else if (time.seconds == 0 && time.minutes == 0) {
+							setTime(time => {
+								return {
+									...time,
+									minutes: 59,
+									seconds: 59,
+									hours: time.hours - 1
+								};
+							});
+						}
+						if (
+							time.hours == 0 &&
+							time.minutes == 0 &&
+							time.seconds == 0
+						) {
+							setTimeOut((timeOut = true));
+						}
+					}, 1000);
+					return () => clearInterval(idd);
+				}
 			}
 		},
 		[pauseStart, countdownOn, time.seconds, time.minutes, time.hours]
@@ -193,7 +196,6 @@ function SecondsCounter() {
 									hours: 0
 								};
 							});
-
 							setPauseStart((pauseStart = false));
 							setCountdownOn((countdownOn = false));
 							setTimeOut((timeOut = false));
